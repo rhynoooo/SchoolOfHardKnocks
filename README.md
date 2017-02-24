@@ -23,12 +23,12 @@ Web code.
 BI Project that we are using as a primer.
 
 ## Technologies:
-> Docker
-> Bash
-> Python
-> AWS EC2
-> AWS RDS
-> AWS other... will be testing different things
+* Docker
+* Bash
+* Python, Javascript, CSS, HTML
+* AWS EC2
+* AWS RDS
+* AWS other... will be testing different things
 
 Tempted to try out EC2 containers and EC2 search
 
