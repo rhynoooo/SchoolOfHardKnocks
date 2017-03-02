@@ -5,7 +5,8 @@ function main
 	echo "`date +"%Y-%m-%d %H:%M:%S"` ====================="
 	echo "`date +"%Y-%m-%d %H:%M:%S"` ==== Adding to master" 
 	echo "`date +"%Y-%m-%d %H:%M:%S"` ====================="
-	git pull origin master 
+	cd /opt/webscraper/automation/webscraper >> /opt/monitor.log 2>&1 
+	git pull origin master >> /opt/monitor.log 2>&1 
 	check_err="$?"
 	if [ $check_err -ne "0" ]
 	then
