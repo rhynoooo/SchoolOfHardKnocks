@@ -12,8 +12,8 @@ function main
 	then
 		echo "`date +"%Y-%m-%d %H:%M:%S"` ====================="
 		echo "`date +"%Y-%m-%d %H:%M:%S"` ==== Failed Update" 
-		echo "`date +"%Y-%m-%d %H:%M:%S"` 
-		aws sns publish --topic-arn arn:aws:sns:us-east-1:384526644452:Fuck --region us-east-1 --subject "Code deployed failed." --message "Please check code deployment"">> /opt/monitor.log 2>&1
+		echo "`date +"%Y-%m-%d %H:%M:%S"` ====================="
+		aws sns publish --topic-arn arn:aws:sns:us-east-1:384526644452:Fuck --region us-east-1 --subject "Code deployed failed." --message "Please check code deployment">> /opt/monitor.log 2>&1
 		exit 1
 	else 
 		echo "`date +"%Y-%m-%d %H:%M:%S"` ====================="
