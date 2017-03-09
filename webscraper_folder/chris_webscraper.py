@@ -3,10 +3,10 @@ import re
 import requests
 from BeautifulSoup import BeautifulSoup
 
-def http_call():
+def http_call(url):
 	"This makes an html call to nbc"
 	try:
-		response = requests.get('http://www.nbcnews.com/specials/geographyofpoverty-heartland-1')
+		response = requests.get(url)
 	except:
 		print("connection couldn't be established")
 		sys.exit(1)
@@ -66,20 +66,44 @@ def top_report(numbers):
 
 	i = 1
 	print('rank\tcount\twords')
-	for x in top5[0:20]:
+	for x in top5[0:10]:
 		tup = [str(i), str(x), ', '.join(numbers[x]).encode('ascii')]
 		print('\t'.join(tup))
 		i += 1
 	print
 	return 0
 
-def main():
-	" main function"
-	response = http_call()
+def web_scrape(url):
+	response = http_call(url)
 	p_tags = html_parse(response)
 	words = word_by_number_dict(p_tags)
 	numbers = number_by_word_list(words)
 	top_report(numbers)
+	return 0
+
+
+def main():
+	" main function"
+	urls=[ 
+			'http://www.msnbc.com/interactives/geography-of-poverty/index.html',
+			'http://www.msnbc.com/interactives/geography-of-poverty/sw.html',
+			'http://www.msnbc.com/interactives/geography-of-poverty/se.html',
+			'http://www.msnbc.com/interactives/geography-of-poverty/ne.html',
+			'http://www.msnbc.com/interactives/geography-of-poverty/nw.html',
+			'http://www.nbcnews.com/specials/geographyofpoverty-heartland-1',
+			'http://www.nbcnews.com/specials/geographyofpoverty-big-city'
+			]
+
+	print("scraping the following urls:")
+	for url in urls:
+		print url
+
+	print 
+
+	for url in urls:
+		web_scrape(url)
+	print("finished scraping...")
+	return 0
 
 main()
 
