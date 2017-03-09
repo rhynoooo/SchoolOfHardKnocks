@@ -22,6 +22,7 @@ words = {}
 
 for p in p_tags:
 	word_list = p.text.split(' ')
+	print word_list
 	for word in word_list:
 		try:
 			words[word] += 1
@@ -36,4 +37,5 @@ for x in words:
 	except:
 		numbers[words[x]] = list(x)
 
-print(numbers.values())
+top5 = sorted(numbers.keys())
+top5.reverse()
