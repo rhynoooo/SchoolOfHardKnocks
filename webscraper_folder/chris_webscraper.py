@@ -3,57 +3,83 @@ import re
 import requests
 from BeautifulSoup import BeautifulSoup
 
-try:
-	response = requests.get('http://www.nbcnews.com/specials/geographyofpoverty-heartland-1')
-except:
-	print("connection couldn't be established")
-	sys.exit(1)
+def http_call():
+	"This makes an html call to nbc"
+	try:
+		response = requests.get('http://www.nbcnews.com/specials/geographyofpoverty-heartland-1')
+	except:
+		print("connection couldn't be established")
+		sys.exit(1)
 
-if (response.status_code == 200):
-	print("Successful: http call")
-else:
-	print("Error: Status Code %s" % str(response.status_code))
-	sys.exit(1)
-
-content = response.content
-soup = BeautifulSoup(content)
-p_tags = soup.findAll('p')
-
-words = {}
-
-for p in p_tags:
-	word_list = p.text.split(' ')
-	for word in word_list:
-		regex = re.compile('[^a-zA-Z]')
-		word = regex.sub('', word).lower()
-		if word.strip() == '' or len(word.strip()) == 1:
-			continue
-		try:
-			if word == 'h':
-				print "h!"
-			words[word] += 1
-		except:
-			words[word] = 1
-
-numbers = {}
-
-for x in words:
-	if numbers.has_key(words[x]):
-		numbers[words[x]].append(x)
+	if (response.status_code == 200):
+		print("Successful: http call")
 	else:
-		numbers[words[x]] = [x]
+		print("Error: Status Code %s" % str(response.status_code))
+		sys.exit(1)	
+	return response
 
-top5 = sorted(numbers.keys())
-top5.reverse()
+def html_parse(response):
+	"This is a html parser for nbc"
+	content = response.content
+	soup = BeautifulSoup(content)
+	p_tags = soup.findAll('p')
+	return p_tags
 
-print
-print "the most common words report:"
-print
+def word_by_number_dict(p_tags):
+	"This takes parsed html and returns words by count"
+	words = {}
 
-i = 1
-print('rank\tcount\twords')
-for x in top5[0:20]:
-	tup = [str(i), str(x), ', '.join(numbers[x]).encode('ascii')]
-	print('\t'.join(tup))
-	i += 1
-print
+	for p in p_tags:
+		word_list = p.text.split(' ')
+		for word in word_list:
+			regex = re.compile('[^a-zA-Z]')
+			word = regex.sub('', word).lower()
+			if word.strip() == '' or len(word.strip()) == 1:
+				continue
+			try:
+				if word == 'h':
+					print "h!"
+				words[word] += 1
+			except:
+				words[word] = 1
+	return words
+
+def number_by_word_list(words):
+	"this finds all the counts and pairs words as a list with them"
+	numbers = {}
+
+	for x in words:
+		if numbers.has_key(words[x]):
+			numbers[words[x]].append(x)
+		else:
+			numbers[words[x]] = [x]
+	return numbers
+
+def top_report(numbers):
+	" This is a top 20 report"
+	top5 = sorted(numbers.keys())
+	top5.reverse()
+
+	print
+	print "the most common words report:"
+	print
+
+	i = 1
+	print('rank\tcount\twords')
+	for x in top5[0:20]:
+		tup = [str(i), str(x), ', '.join(numbers[x]).encode('ascii')]
+		print('\t'.join(tup))
+		i += 1
+	print
+	return 0
+
+def main():
+	" main function"
+	response = http_call()
+	p_tags = html_parse(response)
+	words = word_by_number_dict(p_tags)
+	numbers = number_by_word_list(words)
+	top_report(numbers)
+
+main()
+
