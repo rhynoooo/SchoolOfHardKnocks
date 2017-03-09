@@ -1,4 +1,5 @@
 import sys
+import re
 import requests
 from BeautifulSoup import BeautifulSoup
 
@@ -22,9 +23,14 @@ words = {}
 
 for p in p_tags:
 	word_list = p.text.split(' ')
-	print word_list
 	for word in word_list:
+		regex = re.compile('[^a-zA-Z]')
+		word = regex.sub('', word).lower()
+		if word.strip() == '' or len(word.strip()) == 1:
+			continue
 		try:
+			if word == 'h':
+				print "h!"
 			words[word] += 1
 		except:
 			words[word] = 1
@@ -32,10 +38,22 @@ for p in p_tags:
 numbers = {}
 
 for x in words:
-	try:
+	if numbers.has_key(words[x]):
 		numbers[words[x]].append(x)
-	except:
-		numbers[words[x]] = list(x)
+	else:
+		numbers[words[x]] = [x]
 
 top5 = sorted(numbers.keys())
 top5.reverse()
+
+print
+print "the most common words report:"
+print
+
+i = 1
+print('rank\tcount\twords')
+for x in top5[0:20]:
+	tup = [str(i), str(x), ', '.join(numbers[x]).encode('ascii')]
+	print('\t'.join(tup))
+	i += 1
+print
