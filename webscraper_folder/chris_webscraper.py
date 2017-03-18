@@ -2,6 +2,7 @@ import sys
 import re
 import requests
 from BeautifulSoup import BeautifulSoup
+from stop_words import get_stop_words
 
 def http_call(url):
 	"This makes an html call to nbc"
@@ -34,11 +35,10 @@ def word_by_number_dict(p_tags):
 		for word in word_list:
 			regex = re.compile('[^a-zA-Z]')
 			word = regex.sub('', word).lower()
-			if word.strip() == '' or len(word.strip()) == 1:
+			stop_words = get_stop_words('english')
+			if word.strip() == '' or len(word.strip()) == 1 or word.strip() in stop_words:
 				continue
 			try:
-				if word == 'h':
-					print "h!"
 				words[word] += 1
 			except:
 				words[word] = 1
